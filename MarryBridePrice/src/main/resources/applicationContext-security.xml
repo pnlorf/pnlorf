@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+       <security:global-method-security pre-post-annotations="enabled"></security:global-method-security>
+
+       <security:http auto-config="true">
+              <security:intercept-url pattern="/img/**" filters="none"/>
+              <security:intercept-url pattern="/css/**" filters="none"/>
+              <security:intercept-url pattern="/js/**" filters="none"/>
+       </security:http>
+
+       <bean id="userDetailsManager" class="com.pnlorf.base.security.CustomUserDetailsService"/>
+       <!-- 用户的密码加密或解密 -->
+       <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
+
+       <!-- 注意能够为authentication-manager 设置alias别名-->
+       <security:authentication-manager alias="authenticationManager">
+              <security:authentication-provider user-service-ref="userDetailsManager">
+                     <!--md5加密-->
+                     <security:password-encoder ref="passwordEncoder">
+                            <security:salt-source user-property="username"/>
+                     </security:password-encoder>
+              </security:authentication-provider>
+       </security:authentication-manager>
+</beans>
